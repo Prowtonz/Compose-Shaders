@@ -50,7 +50,8 @@ class ShadersWallpaperService : WallpaperService() {
             surfaceView.setRenderer(shaderRenderer)
         }
 
-        override fun getLifecycle() = lifecycleRegistry
+        override val lifecycle: Lifecycle
+            get() = lifecycleRegistry
 
         @RequiresApi(Build.VERSION_CODES.O_MR1)
         override fun onComputeColors(): WallpaperColors {

@@ -4,10 +4,10 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.Scaffold
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,12 +18,12 @@ import androidx.compose.ui.unit.dp
 import com.nicholas.composeshaders.services.shaders.getShaderList
 
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ShaderDemoScreen(selectedShaderIndex: Int, onBackPressed: () -> Unit) {
     val context = LocalContext.current
     val shaders = remember { getShaderList(context) }
-    var shaderIndex by remember { mutableStateOf(selectedShaderIndex) }
+    var shaderIndex by remember { mutableIntStateOf(selectedShaderIndex) }
     Scaffold {
         Box(Modifier.fillMaxSize()) {
             ShaderDemo(shaders[shaderIndex], Modifier.fillMaxSize())
@@ -43,7 +43,7 @@ fun ShaderDemoScreen(selectedShaderIndex: Int, onBackPressed: () -> Unit) {
                     )
             ) {
                 Icon(
-                    Icons.Filled.ArrowBack,
+                    Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = null,
                     tint = Color.White,
                     modifier = Modifier

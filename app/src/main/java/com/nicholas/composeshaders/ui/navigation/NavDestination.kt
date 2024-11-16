@@ -2,13 +2,13 @@ package com.nicholas.composeshaders.ui.navigation
 
 sealed class NavDestination(val route: String) {
 
-    object ShaderPreview : NavDestination("shaderPreview")
+    data object ShaderPreview : NavDestination("shaderPreview")
 
-    object ShaderDemo : NavDestination("shaderDemo") {
+    data object ShaderDemo : NavDestination("shaderDemo") {
 
-        const val routeWithArg: String = "shaderDemo/{shaderId}"
+        const val ROUTE_WITH_ARG: String = "shaderDemo/{shaderId}"
 
-        const val arg0: String = "shaderId"
+        const val ARG0: String = "shaderId"
 
     }
 

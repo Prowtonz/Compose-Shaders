@@ -1,24 +1,22 @@
 package com.nicholas.composeshaders.ui
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.nicholas.composeshaders.ui.navigation.NavDestination
 import com.nicholas.composeshaders.ui.screens.shaderdemo.ShaderDemoScreen
 import com.nicholas.composeshaders.ui.screens.shaderpreview.ShaderPreviewScreen
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ComposeShadersApp() {
-    val navController = rememberAnimatedNavController()
-    AnimatedNavHost(
+    val navController = rememberNavController()
+    NavHost(
         navController = navController,
         startDestination = NavDestination.ShaderPreview.route
     ) {
@@ -34,16 +32,16 @@ fun ComposeShadersApp() {
             }
         }
         composable(
-            route = NavDestination.ShaderDemo.routeWithArg,
+            route = NavDestination.ShaderDemo.ROUTE_WITH_ARG,
             arguments = listOf(
-                navArgument(NavDestination.ShaderDemo.arg0) { type = NavType.IntType }
+                navArgument(NavDestination.ShaderDemo.ARG0) { type = NavType.IntType }
             ),
             enterTransition = { slideInHorizontally(tween(200)) { 1500 } },
             exitTransition = { slideOutHorizontally(tween(200)) { -1500 } },
             popEnterTransition = { slideInHorizontally(tween(200)) { -1500 } },
             popExitTransition = { slideOutHorizontally(tween(200)) { 1500 } }
         ) {
-            val shaderId = it.arguments?.getInt(NavDestination.ShaderDemo.arg0) ?: return@composable
+            val shaderId = it.arguments?.getInt(NavDestination.ShaderDemo.ARG0) ?: return@composable
             ShaderDemoScreen(shaderId, navController::navigateUp)
         }
     }

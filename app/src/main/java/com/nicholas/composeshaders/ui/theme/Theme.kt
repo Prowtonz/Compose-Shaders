@@ -1,20 +1,29 @@
 package com.nicholas.composeshaders.ui.theme
 
+import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalView
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.consumeAsFlow
 
-private val DarkColorPalette = darkColors(
+private val DarkColorPalette = darkColorScheme(
     primary = Purple200,
-    primaryVariant = Purple700,
+    tertiary = Purple700,
     secondary = Teal200
 )
 
-private val LightColorPalette = lightColors(
+private val LightColorPalette = lightColorScheme(
     primary = Purple500,
-    primaryVariant = Purple700,
+    tertiary = Purple700,
     secondary = Teal200,
     background = PrimaryTextColor
 
@@ -28,6 +37,13 @@ private val LightColorPalette = lightColors(
     */
 )
 
+private val statusBarColorChannel = Channel<Color>()
+private val statusBarColorFlow = statusBarColorChannel.consumeAsFlow()
+
+suspend fun setStatusBarColor(color: Color) {
+    statusBarColorChannel.send(color)
+}
+
 @Composable
 fun ComposeShadersTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -39,8 +55,15 @@ fun ComposeShadersTheme(
         LightColorPalette
     }
 
+    val view = LocalView.current
+    val statusBarColor by statusBarColorFlow.collectAsStateWithLifecycle(initialValue = colors.primary)
+    LaunchedEffect(statusBarColor) {
+        val activity = view.context as Activity
+        activity.window.statusBarColor = statusBarColor.toArgb()
+    }
+
     MaterialTheme(
-        colors = colors,
+        colorScheme = colors,
         typography = Typography,
         shapes = Shapes,
         content = content

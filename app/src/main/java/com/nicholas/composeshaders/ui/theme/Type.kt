@@ -1,6 +1,6 @@
 package com.nicholas.composeshaders.ui.theme
 
-import androidx.compose.material.Typography
+import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -19,19 +19,19 @@ private val BlackMango = FontFamily(
 
 // Set of Material typography styles to start with
 val Typography = Typography(
-    h5 = TextStyle(
+    headlineLarge = TextStyle(
         fontFamily = BlackMango,
         fontWeight = FontWeight.Normal,
         fontSize = 24.sp,
         letterSpacing = 0.sp
     ),
-    h6 = TextStyle(
+    headlineMedium = TextStyle(
         fontFamily = BlackMango,
         fontWeight = FontWeight.Bold,
         fontSize = 20.sp,
         letterSpacing = 2.sp
     ),
-    body2 = TextStyle(
+    bodyMedium = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Light,
         fontSize = 14.sp

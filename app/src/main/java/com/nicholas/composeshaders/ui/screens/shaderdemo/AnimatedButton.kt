@@ -13,25 +13,28 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.nicholas.composeshaders.services.preferencemanager.PreferenceManager
 import com.nicholas.composeshaders.ui.screens.shaderdemo.models.ButtonColorHolder
 import com.nicholas.composeshaders.ui.screens.shaderdemo.models.ButtonState
 import com.nicholas.composeshaders.ui.theme.PrimaryTextColor
 import com.nicholas.composeshaders.services.wallpaperservice.ShadersWallpaperService
+import com.nicholas.composeshaders.ui.theme.setStatusBarColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.IOException
@@ -44,7 +47,6 @@ fun AnimatedButton(
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    val systemUIController = rememberSystemUiController()
     val preferenceManager = remember { PreferenceManager(context) }
     val isWallpaperServiceRunning = ShadersWallpaperService.isRunning(context)
     val selectedShader by preferenceManager.getSelectedShader().collectAsState(-1)
@@ -53,20 +55,22 @@ fun AnimatedButton(
     }
     val buttonBGColor by animateColorAsState(
         Color(buttonColors.backgroundColor),
-        tween(500)
+        tween(500),
+        ""
     )
     val buttonTextColor by animateColorAsState(
         Color(buttonColors.textColor),
-        tween(500)
+        tween(500),
+        ""
     )
     val buttonAlphaAndWidth by animateFloatAsState(
         if(buttonState.showLoader) 0f else 1f,
-        tween(600, easing = FastOutSlowInEasing)
+        tween(600, easing = FastOutSlowInEasing),
+        label = ""
     )
     DisposableEffect(true) { onDispose(preferenceManager::release) }
     LaunchedEffect(buttonBGColor) {
-        val shouldUseDarkIcons = buttonBGColor.luminance() >= 0.5f
-        systemUIController.setStatusBarColor(buttonBGColor, shouldUseDarkIcons)
+        setStatusBarColor(buttonBGColor)
     }
     LaunchedEffect(shaderIndex, selectedShader, isWallpaperServiceRunning) {
         val showSuccessMessage = selectedShader == shaderIndex && isWallpaperServiceRunning
@@ -84,7 +88,7 @@ fun AnimatedButton(
                 .alpha(buttonAlphaAndWidth)
                 .fillMaxWidth(buttonAlphaAndWidth),
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = buttonBGColor.copy(
+                containerColor = buttonBGColor.copy(
                     if(buttonState.showSuccessMessage) 0.8f else 1f
                 )
             ),

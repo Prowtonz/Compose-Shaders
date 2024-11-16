@@ -1,13 +1,17 @@
 package com.nicholas.composeshaders.ui.screens.shaderdemo
 
+import androidx.compose.animation.core.exponentialDecay
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.AnchoredDraggableState
+import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.anchoredDraggable
+import androidx.compose.foundation.gestures.animateTo
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Text
-import androidx.compose.material.rememberSwipeableState
-import androidx.compose.material.swipeable
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,16 +32,31 @@ import kotlinx.coroutines.launch
 
 private const val BOTTOM_SHEET_HEIGHT = 240
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ShaderDemo(shader: Shader, modifier: Modifier = Modifier) {
     val renderer = remember(::ShaderRenderer)
     val coroutineScope = rememberCoroutineScope()
-    val swipeableState = rememberSwipeableState(0)
-    val bottomSheetHeightInPixels = with(LocalDensity.current) { BOTTOM_SHEET_HEIGHT.dp.toPx() }
-    val anchors = mapOf(bottomSheetHeightInPixels to 0, 0f to 1)
+    val velocityThreshold: Float
+    val bottomSheetHeightInPixels = with(LocalDensity.current) {
+        velocityThreshold = 125.dp.toPx()
+        BOTTOM_SHEET_HEIGHT.dp.toPx()
+    }
+    val anchoredDraggableState = remember {
+        AnchoredDraggableState(
+            initialValue = 0,
+            snapAnimationSpec = tween(),
+            decayAnimationSpec = exponentialDecay(),
+            velocityThreshold = { velocityThreshold },
+            positionalThreshold = { it / 2f },
+            anchors = DraggableAnchors {
+                0 at bottomSheetHeightInPixels
+                1 at 0f
+            }
+        )
+    }
     val isBottomSheetVisible by remember {
-        derivedStateOf { swipeableState.currentValue == 1 }
+        derivedStateOf { anchoredDraggableState.currentValue == 1 }
     }
     var buttonColorPair by remember {
         mutableStateOf(
@@ -49,13 +68,13 @@ fun ShaderDemo(shader: Shader, modifier: Modifier = Modifier) {
         delay(500)
         renderer.getButtonColors { buttonColorPair = it }
     }
-    Box(modifier.swipeable(swipeableState, anchors, Orientation.Vertical)) {
+    Box(modifier.anchoredDraggable(anchoredDraggableState, Orientation.Vertical)) {
         GLShader(renderer, Modifier.fillMaxSize())
         Column(
             Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
-                .offset { IntOffset(0, swipeableState.offset.value.toInt()) }
+                .offset { IntOffset(0, anchoredDraggableState.offset.toInt()) }
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -68,14 +87,14 @@ fun ShaderDemo(shader: Shader, modifier: Modifier = Modifier) {
                     )
                     .clickable {
                         coroutineScope.launch {
-                            swipeableState.animateTo(if(isBottomSheetVisible) 0 else 1)
+                            anchoredDraggableState.animateTo(if(isBottomSheetVisible) 0 else 1)
                         }
                     }
             ) {
                 SwipeIcon(
                     BOTTOM_SHEET_HEIGHT.dp,
                     isBottomSheetVisible,
-                    swipeableState,
+                    anchoredDraggableState,
                     Modifier.padding(top = 60.dp)
                 )
                 Text(

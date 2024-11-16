@@ -1,9 +1,9 @@
 package com.nicholas.composeshaders.ui.screens.shaderdemo
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,7 +28,7 @@ fun ShaderBottomSheet(
             Text(
                 shader.title,
                 color = Color.White,
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Medium,
                 letterSpacing = 4.sp,
                 modifier = Modifier.padding(8.dp, 0.dp, 8.dp, 2.dp)
@@ -36,7 +36,7 @@ fun ShaderBottomSheet(
             Text(
                 shader.description,
                 color = Color.White,
-                style = MaterialTheme.typography.body2,
+                style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(8.dp, 0.dp, 8.dp, 20.dp)
             )
             AnimatedButton(

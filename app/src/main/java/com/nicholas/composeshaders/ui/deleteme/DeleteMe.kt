@@ -1,8 +1,8 @@
 package com.nicholas.composeshaders.ui.deleteme
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,7 +18,7 @@ fun DeleteMe() {
     Box(modifier = Modifier) {
         Text(
             "Compose Shaders",
-            style = MaterialTheme.typography.h5,
+            style = MaterialTheme.typography.headlineLarge,
             fontSize = 120.sp,
             textAlign = TextAlign.Center,
             color = Color(0xFF121212),
@@ -32,7 +32,7 @@ fun DeleteMe() {
         Text(
             "by Nicholas Torres",
             fontSize = 50.sp,
-            style = MaterialTheme.typography.body2,
+            style = MaterialTheme.typography.bodyMedium,
             color = Color(0xFF5B5B5B),
             modifier = Modifier
                 .align(Alignment.BottomCenter)
