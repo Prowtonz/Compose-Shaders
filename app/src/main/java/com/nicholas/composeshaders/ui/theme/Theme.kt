@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 
 private val DarkColorPalette = darkColorScheme(
     primary = Purple200,
@@ -38,7 +38,7 @@ private val LightColorPalette = lightColorScheme(
 )
 
 private val statusBarColorChannel = Channel<Color>()
-private val statusBarColorFlow = statusBarColorChannel.consumeAsFlow()
+private val statusBarColorFlow = statusBarColorChannel.receiveAsFlow()
 
 suspend fun setStatusBarColor(color: Color) {
     statusBarColorChannel.send(color)
